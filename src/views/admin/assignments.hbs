@@ -63,7 +63,15 @@
             background-color: white;
             color: #2E5A92;
         }
+        .add-button { padding: 10px
+      15px; border: none; border-radius: 5px; cursor: pointer; margin-left:
+      100px; /* Add margin-left for space from the left */ }
 </style>
+            <button
+      class="add-button"
+      data-bs-toggle="modal"
+      data-bs-target="#addProgram"
+    >Add Assignment</button>
         <div class="container mt-4">
             <table id="participantTable">
                 <thead>
@@ -97,7 +105,71 @@
         </table>
     </div>
 </div>
+<div
+      class="modal fade"
+      id="addProgram"
+      tabindex="-1"
+      aria-labelledby="addProgram"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Assignment</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form
+              action="/admin/{{session.SessionID}}/assignment/create"
+              method="post"
+              class="row g-3 needs-validation"
+              novalidate
+            >
+              {{! title }}
+              <div class="col-12">
+                <label for="validationCustom03" class="form-label">Title</label>
+                <input
+                  type="text"
+                  name="Title"
+                  class="form-control"
+                  id="validationCustom03"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Please provide a valid Crieteria.
+                </div>
+              </div>
+              {{! deadline }}
+              <div class="col-12">
+                <label
+                  for="validationCustom03"
+                  class="form-label"
+                >Deadline</label>
+                <input
+                  type="date"
+                  name="Deadline"
+                  class="form-control"
+                  id="validationCustom03"
+                  required
+                />
+                <div class="invalid-feedback">
+                  Please provide a valid Requirements.
+                </div>
+              </div>
 
+              <div class="col-12">
+                <button class="btn btn-primary" type="submit">Submit form</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 <script>
   new DataTable('#participantTable');
 </script>

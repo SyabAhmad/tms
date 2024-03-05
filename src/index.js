@@ -154,6 +154,21 @@ app.post("/user/create", async (req, res) => {
   }
 });
 
+app.post("/admin/:id/assignment/create", async (req, res) => {
+  const { Title, Deadline } = req.body;
+  const deadline = new Date(Deadline).toLocaleDateString();
+  const SessionID = +req.params.id;
+  const created = await prisma.assignments.create({
+    data: {
+      Title,
+      SessionID,
+      Deadline: deadline,
+      isUploadedByTrainer: true,
+    },
+  });
+
+  return res.redirect(`/admin/session/${SessionID}/assignments`);
+});
 app.post("/:id/assignment/create", async (req, res) => {
   const { Title, Deadline } = req.body;
   const deadline = new Date(Deadline).toLocaleDateString();

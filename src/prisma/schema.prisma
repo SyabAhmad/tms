@@ -282,6 +282,7 @@ model users {
   FirstName                                          String?            @db.VarChar(255)
   userData                                          String?            @db.VarChar(255)
   SessionID                                          String?            @db.VarChar(255)
+  ProgramID                                          String?            @db.VarChar(255)
   LastName                                           String?            @db.VarChar(255)
   ProfilePicture                                     String?            @db.VarChar(255)
   ContactNumber                                      String?            @db.VarChar(255)

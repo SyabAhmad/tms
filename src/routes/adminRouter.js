@@ -978,7 +978,17 @@ router.get("/assignments", async (req, res) => {
 });
 
 router.get("/feedbacks", async (req, res) => {
-  res.render("admin/feedbacks");
+  try {
+    const programs = await prisma.programs.findMany({
+      include: {
+        thirdparty: true,
+      },
+    });
+    res.render("admin/feedbacks", {programs});
+  } catch (error) {
+    console.log("error admin feedbacks: ", error);
+    
+  }
 });
 
 router.get("/feedbacks/program/:id", async (req, res) => {
@@ -993,35 +1003,36 @@ router.get("/feedbacks/program/:id", async (req, res) => {
         Inputs: true,
       },
     });
-    console.log("🚀 ~ router.get ~ feedbacks:", feedbacks[0].Inputs);
-    res.render("admin/programFeedback", { feedbacks });
+    console.log("🚀 ~ router.get ~ feedbacks:", feedbacks);
+    res.render("admin/programFeedback", { feedbacks,id });
   } catch (error) {
     console.log("🚀 ~ router.get ~ error:", error);
   }
 });
 
-router.post("/feedback/create", async (req, res) => {
+router.post("/feedback/:id/create", async (req, res) => {
   try {
     const body = req.body;
-    const inputs = Object.keys(body);
+    console.log(body)
 
-    const newFeedback = await prisma.feedback.create({
+    const feedback = await prisma.feedback.create({
       data: {
-        CreatedByAdmin: true,
+        ProgramID: req.params.id, // replace with the actual program ID
+        CreatedByAdmin: true, // replace with the actual value
       },
     });
 
-    // Step 2: Create multiple FeedbackInput entries associated with the new Feedback
-
-    for (let i = 0; i < inputs.length; i++) {
+    // Step 2: Create FeedbackInput entries for each item in the feedbackData array
+    for (const input of body) {
       await prisma.feedbackInput.create({
         data: {
-          Name: inputs[i],
-          feedbackID: newFeedback.FeedbackID,
+          Name: input.inputName,
+          Value: input.inputType,
+          feedbackID: feedback.FeedbackID, // associate with the created Feedback entry
         },
       });
     }
-    return res.redirect("/admin/feedbacks");
+    // return res.redirect("/admin/feedbacks");
   } catch (error) {
     console.log("🚀 ~ router.post ~ error:", error);
   }
