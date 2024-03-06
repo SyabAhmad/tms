@@ -42,6 +42,21 @@ router.get("/documents", async (req, res) => {
     console.log("student documents error",error);
   }
 });
+router.get("/materials", async (req, res) => {
+  try {
+    const {token} = req.cookies
+    const userData = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("userData",userData);
+
+    const materials = await prisma.materials.findMany({
+      where: { SessionID: +userData.SessionID },
+    });
+    
+    res.render("student/materials", {materials});
+  } catch (error) {
+    console.log("student documents error",error);
+  }
+});
 
 router.get("/profile", async (req, res) => {
   try {
